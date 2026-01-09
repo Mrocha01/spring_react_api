@@ -34,4 +34,3 @@ build/
 
 # Docker volumes / database data
 data/*
-!data/.gitkeep
