@@ -14,7 +14,7 @@ public class ImageServiceImpl implements ImageService {
     private final imageRepository imageRepository;
 
     @Override
-    @Transactional
+    @Transactional // Garante Atomicidade no banco, em caso de erro = rollback
     public Image save(Image image) {
         return imageRepository.save(image);
     }

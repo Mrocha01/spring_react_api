@@ -22,18 +22,24 @@ public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+
     @Column(nullable = false)
     private String name;
+
     @Column(nullable = false)
     private Long size;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ImageExtension extension;
+
     @Column(nullable = false)
     @CreatedDate // LocalDateTime.now()
     private LocalDateTime uploadDate;
+
     @Column(nullable = false)
     private String tags;
+
     @Column(nullable = false)
     @Lob // “Esse campo pode armazenar uma abundância de dados = Large Object
     private byte[] file;
