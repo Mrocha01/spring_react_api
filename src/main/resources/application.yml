@@ -8,3 +8,7 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  servelet:
+    multipar:
+      max-file-size: 20MB
+      max-request-size: 20MB

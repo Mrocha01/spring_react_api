@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.List;
 
 @RestController // Controlador REST precisa dessa notation.
@@ -24,6 +26,7 @@ public class imagesController {
 
     // injetando a ‘interface’, o spring busca pela classe de implementação
     private final ImageService imageService;
+    private final ImageMapper imageMapper;
 
     @PostMapping
     public ResponseEntity<?> save(
@@ -33,19 +36,19 @@ public class imagesController {
     ) throws IOException {
     log.info("Saving image: {}, size: {} ", file.getOriginalFilename(), file.getSize());
 
-        // Faz o parse da ‘String’ para um Objeto MediaType, validando se a estrutura do MIME type está correta.
-        MediaType type = MediaType.valueOf(file.getContentType());
+    Image image = imageMapper.mapToImage(file, name, tags);
+    Image savedImage = imageService.save(image);
+    URI imageUri = buildImageURL(savedImage);
 
-    Image image = Image.builder()
-            .name(name)
-            .tags(String.join(",", tags))
-            .size(file.getSize())
-            .extension(ImageExtension.valueOf(type))
-            .file(file.getBytes())
-            .build();
+    return ResponseEntity.created(imageUri).body("Imagem salva com sucesso!");
+    }
 
-    imageService.save(image);
-
-    return ResponseEntity.status(201).body("Image salva com sucesso!");
+    // localhost:8080/v1/images/
+    private URI buildImageURL(Image image) {
+        String imagePath = "/" + image.getId();
+        return ServletUriComponentsBuilder.fromCurrentRequest()
+                .path(imagePath)
+                .build()
+                .toUri();
     }
 }
