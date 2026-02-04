@@ -5,12 +5,8 @@ import io.github.mrocha01.spring_react_api.domain.enums.ImageExtension;
 import io.github.mrocha01.spring_react_api.domain.service.ImageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -40,7 +36,29 @@ public class imagesController {
     Image savedImage = imageService.save(image);
     URI imageUri = buildImageURL(savedImage);
 
+    // Created passa a URI como URL nos Headers da resposta a requisição Post
     return ResponseEntity.created(imageUri).body("Imagem salva com sucesso!");
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<byte[]> getImage(@PathVariable String id) {
+        var possibleImage = imageService.findById(id);
+
+        if (possibleImage.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        var imagem = possibleImage.get();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(imagem.getExtension().getMediaType());
+        headers.setContentLength(imagem.getSize());
+        headers.setContentDisposition(ContentDisposition
+                .inline()
+                .filename(imagem.getFileName())
+                .build());
+
+        return new ResponseEntity<>(imagem.getFile(), headers, HttpStatus.OK);
     }
 
     // localhost:8080/v1/images/

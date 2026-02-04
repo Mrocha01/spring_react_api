@@ -43,4 +43,8 @@ public class Image {
     @Column(nullable = false)
     @Lob // “Esse campo pode armazenar uma abundância de dados = Large Object
     private byte[] file;
+
+    public String getFileName() {
+        return getName().concat(".").concat(getExtension().name());
+    }
 }
