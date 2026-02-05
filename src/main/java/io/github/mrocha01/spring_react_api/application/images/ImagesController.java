@@ -1,7 +1,6 @@
 package io.github.mrocha01.spring_react_api.application.images;
 
 import io.github.mrocha01.spring_react_api.domain.entity.Image;
-import io.github.mrocha01.spring_react_api.domain.enums.ImageExtension;
 import io.github.mrocha01.spring_react_api.domain.service.ImageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +17,7 @@ import java.util.List;
 @RequestMapping("/v1/images") // URL
 @Slf4j // annotation do Lombok que serve para criar automaticamente um logger da biblioteca
 @RequiredArgsConstructor // Constructor Injection <---- @Autowired
-public class imagesController {
+public class ImagesController {
 
     // injetando a ‘interface’, o spring busca pela classe de implementação
     private final ImageService imageService;
